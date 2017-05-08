@@ -11,6 +11,7 @@ public class ProjectApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		System.out.println("BITE");
 	}
 
 }
