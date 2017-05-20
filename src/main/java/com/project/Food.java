@@ -1,33 +1,55 @@
-package dbObject.com.project;
-
-import java.util.ArrayList;
+package com.project;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Food {
-	Translation withoutNutrientsTranslation, withNutrientsTranslation;
-	ArrayList<Nutrients>nutrients;
-	String unit, portionUnit;
-	double quantity, portionQuantity;
+	private Translation nameTranslations, ingredientTranslations;
+	private Nutrients protein, carbohydrates, fat, energy_kcal, energy;
+	private String unit, portionUnit;
+	private double quantity, portionQuantity;
 	
-	public ArrayList<Nutrients> getNutrients() {
-		return nutrients;
+	public Translation getNameTranslations() {
+		return nameTranslations;
 	}
-	public void setNutrients(ArrayList<Nutrients> nutrients) {
-		this.nutrients = nutrients;
+	public void setNameTranslations(Translation nameTranslations) {
+		this.nameTranslations = nameTranslations;
 	}
-	public Translation getWithoutNutrientsTranslation() {
-		return withoutNutrientsTranslation;
+	public Nutrients getProtein() {
+		return protein;
 	}
-	public void setWithoutNutrientsTranslation(Translation withoutNutrientsTranslation) {
-		this.withoutNutrientsTranslation = withoutNutrientsTranslation;
+	public void setProtein(Nutrients protein) {
+		this.protein = protein;
 	}
-	public Translation getWithNutrientsTranslation() {
-		return withNutrientsTranslation;
+	public Nutrients getCarbohydrates() {
+		return carbohydrates;
 	}
-	public void setWithNutrientsTranslation(Translation withNutrientsTranslation) {
-		this.withNutrientsTranslation = withNutrientsTranslation;
+	public void setCarbohydrates(Nutrients carbohydrates) {
+		this.carbohydrates = carbohydrates;
+	}
+	public Nutrients getFat() {
+		return fat;
+	}
+	public void setFat(Nutrients fat) {
+		this.fat = fat;
+	}
+	public Nutrients getEnergy_kcal() {
+		return energy_kcal;
+	}
+	public void setEnergy_kcal(Nutrients energy_kcal) {
+		this.energy_kcal = energy_kcal;
+	}
+	public Nutrients getEnergy() {
+		return energy;
+	}
+	public void setEnergy(Nutrients energy) {
+		this.energy = energy;
+	}
+	public Translation getIngredientTranslations() {
+		return ingredientTranslations;
+	}
+	public void setIngredientTranslations(Translation ingredientTranslations) {
+		this.ingredientTranslations = ingredientTranslations;
 	}
 	public String getUnit() {
 		return unit;
@@ -50,16 +72,28 @@ public class Food {
 	public double getPortionQuantity() {
 		return portionQuantity;
 	}
+	@Override
+	public String toString() {
+		return "Food [nameTranslations=" + nameTranslations + ", ingredientTranslations=" + ingredientTranslations
+				+ ", protein=" + protein + ", carbohydrates=" + carbohydrates + ", fat=" + fat + ", energy_kcal="
+				+ energy_kcal + ", energy=" + energy + ", unit=" + unit + ", portionUnit=" + portionUnit + ", quantity="
+				+ quantity + ", portionQuantity=" + portionQuantity + "]";
+	}
 	public void setPortionQuantity(double portionQuantity) {
 		this.portionQuantity = portionQuantity;
 	}	
 }
 
 class Nutrients{
-	Translation translation;
-	String unit;
-	double perHundred, perPortion, perDay;
+	private Translation translation;
+	private String unit;
+	private double perHundred, perPortion, perDay;
 	
+	@Override
+	public String toString() {
+		return "Nutrients [translation=" + translation + ", unit=" + unit + ", perHundred=" + perHundred
+				+ ", perPortion=" + perPortion + ", perDay=" + perDay + "]";
+	}
 	public Translation getTranslation() {
 		return translation;
 	}
@@ -93,7 +127,7 @@ class Nutrients{
 }
 
 class Translation{
-	String francais, deutsch, english, italiano;
+	private String francais, deutsch, english, italiano;
 
 	public String getFrancais() {
 		return francais;
@@ -127,4 +161,10 @@ class Translation{
 		this.italiano = italiano;
 	}
 
+	@Override
+	public String toString() {
+		return "Translation [francais=" + francais + ", deutsch=" + deutsch + ", english=" + english + ", italiano="
+				+ italiano + "]";
+	}
+	
 }

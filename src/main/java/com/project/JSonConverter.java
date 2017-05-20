@@ -1,4 +1,4 @@
-package json.com.project;
+package com.project;
 
 public class JSonConverter {
 

@@ -18,7 +18,7 @@ public class JSonReader {
 			FAT = "fat", ENERGY_KCAL = "energy_kcal", ENERGY = "energy";
 	
 	private static Connection connection;
-	public static void main (String[] args) throws JSONException{
+	public JSonReader() throws JSONException{
 		connection = new Connection();
 		String request = (connection.initiateConnection());
 		read(request);
@@ -358,10 +358,12 @@ public class JSonReader {
 			
 			foods.add(food);
 		}
-		for(int i=0; i<foods.size(); i++){
-			System.out.println(foods.get(i).toString());
-
-		}
-		System.out.println("Connection to the db successful !");
+//		for(int i=0; i<foods.size(); i++){
+//			System.out.println(foods.get(i).toString());
+//		}
+		
+	}
+	public ArrayList<Food> getFoods() {
+		return foods;
 	}
 }
