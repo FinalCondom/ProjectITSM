@@ -1,7 +1,19 @@
-package com.project;
+package apiManagement;
+
+import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface FoodRepository extends MongoRepository<Food, String> {
+import dto.Food;
 
-}
+public interface FoodRepository extends MongoRepository<Food, String> {
+	
+//	List<Food> findAllOrderByQuantityAsc();
+	
+	List<Food> findByNameIgnoreCase(String name);
+
+	List<Food> findByQuantity(double quantity);
+	
+	List<Food> findByNameAndQuantity(String name, double quantity);
+	
+}	

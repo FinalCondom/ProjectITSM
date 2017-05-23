@@ -1,4 +1,4 @@
-package com.project;
+package dataBaseFilling;
 
 import java.net.URI;
 
@@ -21,7 +21,7 @@ public class Connection {
 
 		//We build the query and then send it
 		String response = target.path("api").path("v3").path("products")
-				.queryParam("excludes", "id%2Cbarcode%2Cdisplay_name_translations%2Corigin_translations%2Cstatus%2Calcohol_by_volume%2Cimages%2Ccreated_at%2Cupdated_at")
+				.queryParam("excludes", "barcode%2Cdisplay_name_translations%2Corigin_translations%2Cstatus%2Calcohol_by_volume%2Cimages%2Ccreated_at%2Cupdated_at")
 				.request()
 				.header("Accept", "application/json")
 				.header("Authorization", "Token token=fc9317c0f89a70797b43bb303d614af5")

@@ -1,4 +1,4 @@
-package com.project;
+package dataBaseFilling;
 
 import java.util.ArrayList;
 
@@ -6,15 +6,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import dto.Food;
+import dto.Nutrients;
+
 public class JSonReader {
 	private static ArrayList<Food> foods;
 	
-	public static final String DATA = "data", NAME_TRANSLATIONS="name_translations", 
+	public static final String DATA = "data", ID="id", NAME_TRANSLATIONS="name_translations", 
 			INGREDIENT_TRANSLATION = "ingredients_translations", DE="de", FR="fr", IT="it", 
 			EN = "en", UNIT = "unit", QUANTITY = "quantity", PORTION_QUANTITY = "portion_quantity", 
-			PORTION_UNIT = "portion_unit", 
-			NUTRIENTS = "nutrients", PROTEIN = "protein", PER_HUNDRED = "per_hundred", 
-			PER_PORTION = "per_portion", PER_DAY = "per_day", CARBOHYDRATES = "carbohydrates", 
+			PORTION_UNIT = "portion_unit", NUTRIENTS = "nutrients", PROTEIN = "protein", 
+			PER_HUNDRED = "per_hundred", SUGAR = "sugar", SALT = "salt", FIBER = "fiber",
+			SATUREDFAT = "saturedFat", PER_PORTION = "per_portion", PER_DAY = "per_day", CARBOHYDRATES = "carbohydrates", 
 			FAT = "fat", ENERGY_KCAL = "energy_kcal", ENERGY = "energy";
 	
 	private static Connection connection;
@@ -40,57 +43,37 @@ public class JSonReader {
 			
 			//Shortcut to the food object
 			JSONObject foodObject = dataArray.getJSONObject(i);
+			
+			//we get back the id of the object
+			food.setId(foodObject.getInt(ID)+"");
+			
 			//Shortcut to the name translation object
 			JSONObject nameTranslationObject = foodObject.getJSONObject(NAME_TRANSLATIONS);
-			
-			//We set up a translation for the name of the object, we handle the case when there is no translations
-			Translation nameTranslation = new Translation();
-			try {
-				nameTranslation.setDeutsch(nameTranslationObject.getString(DE));
-			} catch (JSONException e) {
-				nameTranslation.setDeutsch("");
-			}
-			try {
-				nameTranslation.setFrancais(nameTranslationObject.getString(FR));
-			} catch (JSONException e) {
-				nameTranslation.setFrancais("");
-			}
-			try {
-				nameTranslation.setItaliano(nameTranslationObject.getString(IT));
-			} catch (JSONException e) {
-				nameTranslation.setItaliano("");
-			}
-			try {
-				nameTranslation.setEnglish(nameTranslationObject.getString(EN));
-			} catch (JSONException e) {
-				nameTranslation.setEnglish("");
-			}
-
-			food.setNameTranslations(nameTranslation);
-			
 			JSONObject ingredientTranslationObject = foodObject.getJSONObject(INGREDIENT_TRANSLATION);
-			
-			Translation ingredientTranslation = new Translation();
-			//We set up a translation for the name of the object with his ingredient, we handle the case when there is no translations
+
 			try {
-				ingredientTranslation.setDeutsch(ingredientTranslationObject.getString(DE));
+				food.setName(nameTranslationObject.getString(FR));
+				food.setIngredient(ingredientTranslationObject.getString(FR));
 			} catch (JSONException e) {
-				ingredientTranslation.setDeutsch("");
-			}
-			try {
-				ingredientTranslation.setFrancais(ingredientTranslationObject.getString(FR));
-			} catch (JSONException e) {
-				ingredientTranslation.setFrancais("");
-			}
-			try {
-				ingredientTranslation.setItaliano(ingredientTranslationObject.getString(IT));
-			} catch (JSONException e) {
-				ingredientTranslation.setItaliano("");
-			}
-			try {
-				ingredientTranslation.setEnglish(ingredientTranslationObject.getString(EN));
-			} catch (JSONException e) {
-				ingredientTranslation.setEnglish("");
+				try{
+					food.setName(nameTranslationObject.getString(EN));
+					food.setIngredient(ingredientTranslationObject.getString(EN));
+				} catch (JSONException e2){
+					try{
+						food.setName(nameTranslationObject.getString(DE));
+						food.setIngredient(ingredientTranslationObject.getString(DE));
+					} catch (JSONException e3){
+						try{
+							food.setName(nameTranslationObject.getString(IT));
+							food.setIngredient(nameTranslationObject.getString(IT));
+
+						} catch (JSONException e4){
+							food.setName("NONAME");
+							food.setIngredient("NONAME");
+							System.out.println("The food you entered has no ingredient in it");
+						}
+					}
+				}
 			}
 			
 			//We set up the different values of the food (unit, quanity and by portion)
@@ -99,270 +82,84 @@ public class JSonReader {
 			food.setPortionQuantity(foodObject.getDouble(PORTION_QUANTITY));
 			food.setPortionUnit(foodObject.getString(PORTION_UNIT));
 			
-			
-			
 			JSONObject nutrients = foodObject.getJSONObject(NUTRIENTS);
 			
-			JSONObject proteinObject = nutrients.getJSONObject(PROTEIN);
-			//We set up the protein
-			Nutrients protein = new Nutrients();
-			
-			JSONObject proteinTranslationObject = proteinObject.getJSONObject(NAME_TRANSLATIONS);
-			
-			Translation proteinTranslation = new Translation();
-//			We set up the protein translations and handle where there is none
-			try {
-				proteinTranslation.setDeutsch(proteinTranslationObject.getString(DE));
-			} catch (JSONException e) {
-				proteinTranslation.setDeutsch("");
-			}
-			try {
-				proteinTranslation.setFrancais(proteinTranslationObject.getString(FR));
-			} catch (JSONException e) {
-				proteinTranslation.setFrancais("");
-			}
-			try {
-				proteinTranslation.setItaliano(proteinTranslationObject.getString(IT));
-			} catch (JSONException e) {
-				proteinTranslation.setItaliano("");
-			}
-			try {
-				proteinTranslation.setEnglish(proteinTranslationObject.getString(EN));
-			} catch (JSONException e) {
-				proteinTranslation.setEnglish("");
-			}
-			
-			//We set up the protein values and handle when there is no way
-			protein.setTranslation(proteinTranslation);
-			protein.setUnit(proteinObject.getString(UNIT));
-			try {
-				protein.setPerHundred(proteinObject.getDouble(PER_HUNDRED));
-			} catch (JSONException e) {
-				protein.setPerHundred(0.0);
-			}
-			try {
-				protein.setPerPortion(proteinObject.getDouble(PER_PORTION));
-			} catch (JSONException e) {
-				protein.setPerPortion(0.0);
-			}
-			try {
-				protein.setPerDay(proteinObject.getDouble(PER_DAY));
-			} catch (JSONException e) {
-				protein.setPerDay(0.0);
-			}
-			
-			food.setProtein(protein);
-			
-			JSONObject carbohydratesObject = nutrients.getJSONObject(CARBOHYDRATES);
-			
-			Nutrients carbohydrates = new Nutrients();
-			
-			JSONObject carbohydratesTranslationObject = carbohydratesObject.getJSONObject(NAME_TRANSLATIONS);
-			
-			Translation carbohydratesTranslation = new Translation();
-//			We set up the carbohydrates translations and their values and handle where there is none
-			try {
-				carbohydratesTranslation.setDeutsch(carbohydratesTranslationObject.getString(DE));
-			} catch (JSONException e) {
-				carbohydratesTranslation.setDeutsch("");
-			}
-			try {
-				carbohydratesTranslation.setFrancais(carbohydratesTranslationObject.getString(FR));
-			} catch (JSONException e) {
-				carbohydratesTranslation.setFrancais("");
-			}
-			try {
-				carbohydratesTranslation.setItaliano(carbohydratesTranslationObject.getString(IT));
-			} catch (JSONException e) {
-				carbohydratesTranslation.setItaliano("");
-			}
-			try {
-				carbohydratesTranslation.setEnglish(carbohydratesTranslationObject.getString(EN));
-			} catch (JSONException e) {
-				carbohydratesTranslation.setEnglish("");
-			}
-			
-			carbohydrates.setTranslation(carbohydratesTranslation);
-			carbohydrates.setUnit(carbohydratesObject.getString(UNIT));
-			try {
-				carbohydrates.setPerHundred(carbohydratesObject.getDouble(PER_HUNDRED));
-			} catch (JSONException e) {
-				carbohydrates.setPerHundred(0.0);
-			}
-			try {
-				carbohydrates.setPerPortion(carbohydratesObject.getDouble(PER_PORTION));
-			} catch (JSONException e) {
-				carbohydrates.setPerPortion(0.0);
-			}
-			try {
-				carbohydrates.setPerDay(carbohydratesObject.getDouble(PER_DAY));
-			} catch (JSONException e) {
-				carbohydrates.setPerDay(0.0);
-			}
-			
-			food.setCarbohydrates(carbohydrates);
-			
-			JSONObject fatObject = nutrients.getJSONObject(PROTEIN);
-			
-			Nutrients fat = new Nutrients();
-			
-			JSONObject fatTranslationObject = fatObject.getJSONObject(NAME_TRANSLATIONS);
-			
-			Translation fatTranslation = new Translation();
-//			We set up the fat translations and their values and handle where there is none
-
-			try {
-				fatTranslation.setDeutsch(fatTranslationObject.getString(DE));
-			} catch (JSONException e) {
-				fatTranslation.setDeutsch("");
-			}
-			try {
-				fatTranslation.setFrancais(fatTranslationObject.getString(FR));
-			} catch (JSONException e) {
-				fatTranslation.setFrancais("");
-			}
-			try {
-				fatTranslation.setItaliano(fatTranslationObject.getString(IT));
-			} catch (JSONException e) {
-				fatTranslation.setItaliano("");
-			}
-			try {
-				fatTranslation.setEnglish(fatTranslationObject.getString(EN));
-			} catch (JSONException e) {
-				fatTranslation.setEnglish("");
-			}
-			
-			fat.setTranslation(fatTranslation);
-			fat.setUnit(fatObject.getString(UNIT));
-			
-			try {
-				fat.setPerHundred(fatObject.getDouble(PER_HUNDRED));
-			} catch (JSONException e) {
-				fat.setPerHundred(0.0);
-			}
-			try {
-				fat.setPerPortion(fatObject.getDouble(PER_PORTION));
-			} catch (JSONException e) {
-				fat.setPerPortion(0.0);
-			}
-			try {
-				fat.setPerDay(fatObject.getDouble(PER_DAY));
-			} catch (JSONException e) {
-				fat.setPerDay(0.0);
-			}
-						
-			food.setFat(fat);
-			
-			JSONObject energyKCalObject = nutrients.getJSONObject(PROTEIN);
-			
-			Nutrients energyKCal = new Nutrients();
-			
-			JSONObject energyKCalTranslationObject = energyKCalObject.getJSONObject(NAME_TRANSLATIONS);
-			
-			Translation energyKCalTranslation = new Translation();
-//			We set up the energyKCal translations and their values and handle where there is none
-
-			try {
-				energyKCalTranslation.setDeutsch(energyKCalTranslationObject.getString(DE));
-			} catch (JSONException e) {
-				energyKCalTranslation.setDeutsch("");
-			}
-			try {
-				energyKCalTranslation.setFrancais(energyKCalTranslationObject.getString(FR));
-			} catch (JSONException e) {
-				energyKCalTranslation.setFrancais("");
-			}
-			try {
-				energyKCalTranslation.setItaliano(energyKCalTranslationObject.getString(IT));
-			} catch (JSONException e) {
-				energyKCalTranslation.setItaliano("");
-			}
-			try {
-				energyKCalTranslation.setEnglish(energyKCalTranslationObject.getString(EN));
-			} catch (Exception e) {
-				energyKCalTranslation.setEnglish("");
-			}
-			
-			energyKCal.setTranslation(energyKCalTranslation);
-			energyKCal.setUnit(energyKCalObject.getString(UNIT));
-			
-			try {
-				energyKCal.setPerHundred(energyKCalObject.getDouble(PER_HUNDRED));
-			} catch (JSONException e) {
-				energyKCal.setPerHundred(0.0);
-			}
-			try {
-				energyKCal.setPerPortion(energyKCalObject.getDouble(PER_PORTION));
-			} catch (JSONException e) {
-				energyKCal.setPerPortion(0.0);
-			}
-			try {
-				energyKCal.setPerDay(energyKCalObject.getDouble(PER_DAY));
-			} catch (JSONException e) {
-				energyKCal.setPerDay(0.0);
-			}
-					
-			
-			food.setEnergy_kcal(energyKCal);
-			
-			JSONObject energyObject = nutrients.getJSONObject(PROTEIN);
-			
-			Nutrients energy = new Nutrients();
-			
-			JSONObject energyTranslationObject = energyObject.getJSONObject(NAME_TRANSLATIONS);
-			
-			Translation energyTranslation = new Translation();
-//			We set up the energy translations and their values and handle where there is none
-
-			try {
-				energyTranslation.setDeutsch(energyTranslationObject.getString(DE));
-			} catch (JSONException e) {
-				energyTranslation.setDeutsch("");
-			}
-			try {
-				energyTranslation.setFrancais(energyTranslationObject.getString(FR));
-			} catch (JSONException e) {
-				energyTranslation.setFrancais("");
-			}
-			try {
-				energyTranslation.setItaliano(energyTranslationObject.getString(IT));
-			} catch (JSONException e) {
-				energyTranslation.setItaliano("");
-			}
-			try {
-				energyTranslation.setEnglish(energyTranslationObject.getString(EN));
-			} catch (Exception e) {
-				energyTranslation.setEnglish("");
-			}
-			
-			energy.setTranslation(energyTranslation);
-			energy.setUnit(energyObject.getString(UNIT));
-			
-			try {
-				energy.setPerHundred(energyObject.getDouble(PER_HUNDRED));
-			} catch (JSONException e) {
-				energy.setPerHundred(0.0);
-			}
-			try {
-				energy.setPerPortion(energyObject.getDouble(PER_PORTION));
-			} catch (JSONException e) {
-				energy.setPerPortion(0.0);
-			}
-			try {
-				energy.setPerDay(energyObject.getDouble(PER_DAY));
-			} catch (JSONException e) {
-				energy.setPerDay(0.0);
-			}
-			
-			food.setEnergy(energy);
+			food.setSalt(addIngredient(food, nutrients, SALT));
+			food.setProtein(addIngredient(food, nutrients, PROTEIN));
+			food.setFiber(addIngredient(food, nutrients, FIBER));
+			food.setSugars(addIngredient(food, nutrients, SUGAR));
+			food.setCarbohydrates(addIngredient(food, nutrients, CARBOHYDRATES));
+			food.setSaturedFat(addIngredient(food, nutrients, SATUREDFAT));
+			food.setEnergyKcal(addIngredient(food, nutrients, ENERGY_KCAL));
+			food.setEnergy(addIngredient(food, nutrients, ENERGY));
 			
 			foods.add(food);
 		}
-//		for(int i=0; i<foods.size(); i++){
-//			System.out.println(foods.get(i).toString());
-//		}
-		
 	}
+		
+	//this method add a given nutrients to a given food
+	private static Nutrients addIngredient(Food food, JSONObject nutrients, String ingredientName) {
+		JSONObject ingredientObject = null;
+
+		try {
+			ingredientObject = nutrients.getJSONObject(ingredientName);
+		} catch (JSONException e1) {
+		// TODO Auto-generated catch block
+			System.out.println("NO "+ingredientName+" ADDED !");
+			return null;
+		}
+		
+		Nutrients ingredient = new Nutrients();
+		JSONObject nameTranslationObject = null;
+		try {
+			nameTranslationObject = ingredientObject.getJSONObject(NAME_TRANSLATIONS);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+//			We set up the fat translations and their values and handle where there is none
+		try {
+			ingredient.setName(nameTranslationObject.getString(FR));
+		} catch (JSONException e) {
+			try{
+				ingredient.setName(nameTranslationObject.getString(EN));
+			} catch (JSONException e2){
+				try{
+					ingredient.setName(nameTranslationObject.getString(DE));
+				} catch (JSONException e3){
+					try{
+						ingredient.setName(nameTranslationObject.getString(IT));
+					} catch (JSONException e4){
+						ingredient.setName("NONAME");
+						System.out.println("The "+ingredientName+" you entered has no ingredient in it");
+					}
+				}
+			}
+		}
+		try {
+			ingredient.setUnit(ingredientObject.getString(UNIT));
+		} catch (Exception e) {
+			ingredient.setUnit("");
+		}	
+		try {
+			ingredient.setPerHundred(ingredientObject.getDouble(PER_HUNDRED));
+		} catch (JSONException e) {
+			ingredient.setPerHundred(0.0);
+		}
+		try {
+			ingredient.setPerPortion(ingredientObject.getDouble(PER_PORTION));
+		} catch (JSONException e) {
+			ingredient.setPerPortion(0.0);
+		}
+		try {
+			ingredient.setPerDay(ingredientObject.getDouble(PER_DAY));
+		} catch (JSONException e) {
+			ingredient.setPerDay(0.0);
+		}
+		return ingredient;
+	}
+	
 	public ArrayList<Food> getFoods() {
 		return foods;
 	}
