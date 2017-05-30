@@ -30,14 +30,13 @@ public class FoodRestController {
 	
 	@RequestMapping(method=RequestMethod.GET, params={"name"})
 	public List<Food> getByNames(@RequestParam(value = "name") String name){
-		System.out.println("BITE"+name);
 		return repo.findByNameIgnoreCase(name);	
 	}
 
 	@RequestMapping(method=RequestMethod.GET, params={"name", "quantity"})
 	public List<Food> getByNamesAndQuantity(@RequestParam(value = "name") String name, 
-			@RequestParam(value = "quantity") String quantity){
-		return repo.findByNameAndQuantity(name, Double.parseDouble(quantity));		
+			@RequestParam(value = "quantity") double quantity){
+		return repo.findByNameAndQuantity(name, quantity);		
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
@@ -51,23 +50,15 @@ public class FoodRestController {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT, value="{id}")
-	public Food update(@RequestBody Food food){
-		Food update = repo.findOne(food.getId());
+	public Food update(@RequestBody Food food, @PathVariable String id){
+		Food update = repo.findOne(id);
 		update.setName(food.getName());
-		update.setIngredient(food.getIngredient());
+		update.setIngredients(food.getIngredients());
 		update.setQuantity(food.getQuantity());
 		update.setUnit(food.getUnit());
-		update.setPortionQuantity(food.getPortionQuantity());
-		update.setPortionUnit(food.getPortionUnit());
-		update.setProtein(food.getProtein());
-		update.setFiber(food.getFiber());
-		update.setSugars(food.getSugars());
-		update.setSalt(food.getSalt());
-		update.setSaturedFat(food.getSaturedFat());
-		update.setCarbohydrates(food.getCarbohydrates());		
-		update.setFat(food.getFat());
-		update.setEnergyKcal(food.getEnergyKcal());
-		update.setEnergy(food.getEnergy());		
+		update.setportion_quantity(food.getportion_quantity());
+		update.setportion_unit(food.getportion_unit());
+		update.setNutrients(food.getNutrients());
 		return repo.save(update);
 	}
 	

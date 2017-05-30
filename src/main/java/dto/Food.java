@@ -1,5 +1,7 @@
 package dto;
 
+import java.util.HashMap;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,92 +9,28 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Food{
 	@Id
 	private String id;
-	private String name, ingredient;
-	private Nutrients salt, protein, fiber, sugars, carbohydrates, saturedFat, fat, energyKcal, energy;
-	private String unit, portionUnit;
-	private double quantity, portionQuantity;
+	private String name, ingredients;
+	private HashMap<String, Nutrients> nutrients;
+	private String unit, portion_unit;
+	private double quantity, portion_quantity;
 	
-	public Nutrients getSalt() {
-		return salt;
-	}
-
-	public void setSalt(Nutrients salt) {
-		this.salt = salt;
-	}
-
-	public Nutrients getFiber() {
-		return fiber;
-	}
-
-	public void setFiber(Nutrients fiber) {
-		this.fiber = fiber;
-	}
-
-	public Nutrients getSugars() {
-		return sugars;
-	}
-
-	public void setSugars(Nutrients sugars) {
-		this.sugars = sugars;
-	}
-
-	public Nutrients getSaturedFat() {
-		return saturedFat;
-	}
-
-	public void setSaturedFat(Nutrients saturedFat) {
-		this.saturedFat = saturedFat;
-	}
-
-	public Nutrients getEnergyKcal() {
-		return energyKcal;
-	}
-
-	public void setEnergyKcal(Nutrients energyKcal) {
-		this.energyKcal = energyKcal;
-	}
-
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getIngredient() {
-		return ingredient;
-	}
-	public void setIngredient(String ingredient) {
-		this.ingredient = ingredient;
-	}
-	public Nutrients getProtein() {
-		return protein;
-	}
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public void setProtein(Nutrients protein) {
-		this.protein = protein;
+	public String getName() {
+		return name;
 	}
-	public Nutrients getCarbohydrates() {
-		return carbohydrates;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public void setCarbohydrates(Nutrients carbohydrates) {
-		this.carbohydrates = carbohydrates;
+	public String getIngredients() {
+		return ingredients;
 	}
-	public Nutrients getFat() {
-		return fat;
-	}
-	public void setFat(Nutrients fat) {
-		this.fat = fat;
-	}
-	public Nutrients getEnergy() {
-		return energy;
-	}
-	public void setEnergy(Nutrients energy) {
-		this.energy = energy;
+	public void setIngredients(String ingredients) {
+		this.ingredients = ingredients;
 	}
 	public String getUnit() {
 		return unit;
@@ -100,22 +38,28 @@ public class Food{
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-	public String getPortionUnit() {
-		return portionUnit;
-	}
-	public void setPortionUnit(String portionUnit) {
-		this.portionUnit = portionUnit;
-	}
 	public double getQuantity() {
 		return quantity;
 	}
 	public void setQuantity(double quantity) {
 		this.quantity = quantity;
 	}
-	public double getPortionQuantity() {
-		return portionQuantity;
+	public String getportion_unit() {
+		return portion_unit;
 	}
-	public void setPortionQuantity(double portionQuantity) {
-		this.portionQuantity = portionQuantity;
+	public void setportion_unit(String portion_unit) {
+		this.portion_unit = portion_unit;
+	}
+	public double getportion_quantity() {
+		return portion_quantity;
+	}
+	public void setportion_quantity(double portion_quantity) {
+		this.portion_quantity = portion_quantity;
+	}
+	public HashMap<String, Nutrients> getNutrients() {
+		return nutrients;
+	}
+	public void setNutrients(HashMap<String, Nutrients> nutrients) {
+		this.nutrients = nutrients;
 	}	
 }
