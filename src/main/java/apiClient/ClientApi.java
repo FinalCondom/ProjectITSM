@@ -15,6 +15,7 @@ import org.glassfish.jersey.client.ClientConfig;
 public class ClientApi {
 	
 	public String getAll(){
+		//We initiate the connection
 		ClientConfig config = new ClientConfig();
 
 		Client client = ClientBuilder.newClient(config);
@@ -27,15 +28,8 @@ public class ClientApi {
 				.header("Accept", "application/json")
 				.accept(MediaType.TEXT_PLAIN).get(String.class);
 				
+		//We return the response
 		return response;
-		
-//		JSonReaderAPI jSonReader = new JSonReaderAPI();
-//		try {
-//			jSonReader.read(response);
-//		} catch (JSONException e) {
-//			System.out.println("Unable to read data");
-//		}
-//		return jSonReader.getFoods();
 	}	
 	
 	public String getSortedByQuantity(){
@@ -55,6 +49,7 @@ public class ClientApi {
 	}
 	
 	public String getByName(String name){
+		//We initiate the connection
 		ClientConfig config = new ClientConfig();
 
 		Client client = ClientBuilder.newClient(config);
@@ -67,11 +62,12 @@ public class ClientApi {
 				.request()
 				.header("Accept", "application/json")
 				.accept(MediaType.TEXT_PLAIN).get(String.class);
-		
+		//We return the response
 		return response;
 	}
 	
 	public String getByNameAndQuantity(String name, double quantity){
+		//We initiate the connection
 		ClientConfig config = new ClientConfig();
 
 		Client client = ClientBuilder.newClient(config);
@@ -84,12 +80,12 @@ public class ClientApi {
 				.request()
 				.header("Accept", "application/json")
 				.accept(MediaType.TEXT_PLAIN).get(String.class);
-//		System.out.println(response);
-		
+		//We return the response
 		return response;
 	}
 	
 	public int create(String food){
+		//We initiate the connection
 		ClientConfig config = new ClientConfig();
 
 		Client client = ClientBuilder.newClient(config);
@@ -101,10 +97,12 @@ public class ClientApi {
 				.header("Accept", "application/json")
 				.accept(MediaType.TEXT_PLAIN).post(Entity.json(food));
 		
+		//We return the response code
 		return response.getStatus();
 	}
 	
 	public int update(String food, String id){
+		//We initiate the connection
 		ClientConfig config = new ClientConfig();
 
 		Client client = ClientBuilder.newClient(config);
@@ -117,12 +115,11 @@ public class ClientApi {
 				.request()
 				.header("Accept", "application/json")
 				.accept(MediaType.TEXT_PLAIN).put(Entity.json(food));
-		
-//		System.out.println(response);
-		
+		//we return the response code
 		return response.getStatus();
 	}
 	public int delete(String id){
+		//We initiate the connection
 		ClientConfig config = new ClientConfig();
 
 		Client client = ClientBuilder.newClient(config);
@@ -135,11 +132,10 @@ public class ClientApi {
 				.request()
 				.header("Accept", "application/json")
 				.accept(MediaType.TEXT_PLAIN).delete();
-		
-//		System.out.println(response);
-		
+		//We return the response code
 		return response.getStatus();
 	}
+	//We return always the same base uri
 	private static URI getBaseURI() {
 		return UriBuilder.fromUri("http://localhost:8080/food").build();
 	}

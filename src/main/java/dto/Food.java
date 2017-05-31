@@ -5,11 +5,13 @@ import java.util.HashMap;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+//This is the standard class for the food object
 @Document
 public class Food{
 	@Id
 	private String id;
 	private String name, ingredients;
+	//this hashmap contain all the nutrients into the food
 	private HashMap<String, Nutrients> nutrients;
 	private String unit, portion_unit;
 	private double quantity, portion_quantity;

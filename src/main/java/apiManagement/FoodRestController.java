@@ -18,37 +18,39 @@ import dto.Food;
 public class FoodRestController {
 	@Autowired
 	FoodRepository repo;
-	
+		
+	//Return everything from the db
 	@RequestMapping(method=RequestMethod.GET)
 	public List<Food> getAll(){
 		return repo.findAll();
 	}
+	//Get only by quantities
 	@RequestMapping(method=RequestMethod.GET, value="quantity")
 	public List<Food> getAllByQuantites(){
 		return repo.findAll(new Sort(Sort.Direction.ASC, "quantity"));
 	}
-	
+	//get only by names
 	@RequestMapping(method=RequestMethod.GET, params={"name"})
 	public List<Food> getByNames(@RequestParam(value = "name") String name){
 		return repo.findByNameIgnoreCase(name);	
 	}
-
+	//get only by names and quantities
 	@RequestMapping(method=RequestMethod.GET, params={"name", "quantity"})
 	public List<Food> getByNamesAndQuantity(@RequestParam(value = "name") String name, 
 			@RequestParam(value = "quantity") double quantity){
-		return repo.findByNameAndQuantity(name, quantity);		
+		return repo.findByQuantityAndNameIgnoreCase(quantity, name);		
 	}
-	
+	//add a new food
 	@RequestMapping(method=RequestMethod.POST)
 	public Food create(@RequestBody Food food){
 		return repo.save(food);
 	}
-	
+	//Delete a food from the db
 	@RequestMapping(method=RequestMethod.DELETE, value="{id}")
 	public void delete(@PathVariable String id){
 		repo.delete(id);
 	}
-	
+	//Update a food
 	@RequestMapping(method=RequestMethod.PUT, value="{id}")
 	public Food update(@RequestBody Food food, @PathVariable String id){
 		Food update = repo.findOne(id);

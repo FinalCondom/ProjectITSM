@@ -13,6 +13,7 @@ import dto.Nutrients;
 public class JSonReaderOpenFood {
 	private static ArrayList<Food> foods;
 	
+	//all keys for the json
 	public static final String DATA = "data", ID="id", NAME_TRANSLATIONS="name_translations", 
 			INGREDIENT_TRANSLATION = "ingredients_translations", DE="de", FR="fr", IT="it", 
 			EN = "en", UNIT = "unit", QUANTITY = "quantity", PORTION_QUANTITY = "portion_quantity", 
@@ -21,13 +22,11 @@ public class JSonReaderOpenFood {
 			SATUREDFAT = "saturedFat", PER_PORTION = "per_portion", PER_DAY = "per_day", CARBOHYDRATES = "carbohydrates", 
 			FAT = "fat", ENERGY_KCAL = "energy_kcal", ENERGY = "energy";
 
-	public void read(String dataFromAPIParam) throws JSONException{
-		String dataFromAPI = dataFromAPIParam;
+	//read the data from a json inside a food object
+	public void read(String dataFromAPI) throws JSONException{
 		foods = new ArrayList<Food>();
-		
-		JSONObject mainObject = null;
-		
-		mainObject = new JSONObject(dataFromAPI);
+		//We create an object with the whole json file
+		JSONObject mainObject = new JSONObject(dataFromAPI);
 		//The data array symbolize all object into the JSON file
 		JSONArray dataArray = mainObject.getJSONArray(DATA);
 		//We take all objects separately
@@ -45,6 +44,7 @@ public class JSonReaderOpenFood {
 			JSONObject nameTranslationObject = foodObject.getJSONObject(NAME_TRANSLATIONS);
 			JSONObject ingredientTranslationObject = foodObject.getJSONObject(INGREDIENT_TRANSLATION);
 
+			//We try to set the name to french, if not english, then german, italian and if nothing we enter a default value
 			try {
 				food.setName(nameTranslationObject.getString(FR));
 				food.setIngredients(ingredientTranslationObject.getString(FR));
@@ -71,26 +71,45 @@ public class JSonReaderOpenFood {
 			}
 			
 			//We set up the different values of the food (unit, quanity and by portion)
-			food.setUnit(foodObject.getString(UNIT));
-			food.setQuantity(foodObject.getDouble(QUANTITY));
-			food.setportion_quantity(foodObject.getDouble(PORTION_QUANTITY));
-			food.setportion_unit(foodObject.getString(PORTION_UNIT));
+			try {
+				food.setUnit(foodObject.getString(UNIT));
+			} catch (JSONException e) {
+				food.setUnit("");
+			}	
+			try {
+				food.setQuantity(foodObject.getDouble(UNIT));
+			} catch (JSONException e) {
+				food.setQuantity(0.0);
+			}				
+			try {
+				food.setportion_quantity(foodObject.getDouble(PORTION_QUANTITY));
+			} catch (JSONException e) {
+				food.setportion_quantity(0.0);
+			}	
+			try {
+				food.setportion_unit(foodObject.getString(PORTION_UNIT));
+			} catch (JSONException e) {
+				food.setportion_unit("");
+			}				
 			
+			//We take the object nutrient and insert them into the hashmap
 			JSONObject nutrients = foodObject.getJSONObject(NUTRIENTS);
 			
 			HashMap<String, Nutrients> foodMap = new HashMap<>();
 			
 			foodMap.put(SALT, addIngredient(food, nutrients, SALT));
-			foodMap.put(SALT, addIngredient(food, nutrients, PROTEIN));
-			foodMap.put(SALT, addIngredient(food, nutrients, FIBER));
-			foodMap.put(SALT, addIngredient(food, nutrients, SUGAR));
-			foodMap.put(SALT, addIngredient(food, nutrients, CARBOHYDRATES));
-			foodMap.put(SALT, addIngredient(food, nutrients, SATUREDFAT));
-			foodMap.put(SALT, addIngredient(food, nutrients, ENERGY_KCAL));
-			foodMap.put(SALT, addIngredient(food, nutrients, ENERGY));
+			foodMap.put(PROTEIN, addIngredient(food, nutrients, PROTEIN));
+			foodMap.put(FIBER, addIngredient(food, nutrients, FIBER));
+			foodMap.put(SUGAR, addIngredient(food, nutrients, SUGAR));
+			foodMap.put(CARBOHYDRATES, addIngredient(food, nutrients, CARBOHYDRATES));
+			foodMap.put(SATUREDFAT, addIngredient(food, nutrients, SATUREDFAT));
+			foodMap.put(ENERGY_KCAL, addIngredient(food, nutrients, ENERGY_KCAL));
+			foodMap.put(ENERGY, addIngredient(food, nutrients, ENERGY));
 			
+			//We add the hashmap to the food
 			food.setNutrients(foodMap);
 			
+			//We add the food object to the food list
 			foods.add(food);
 		}
 	}
@@ -116,7 +135,7 @@ public class JSonReaderOpenFood {
 			e1.printStackTrace();
 		}
 
-//			We set up the fat translations and their values and handle where there is none
+//		We set up the fat translations and their values and handle where there is none
 		try {
 			ingredient.setName(nameTranslationObject.getString(FR));
 		} catch (JSONException e) {
@@ -135,9 +154,10 @@ public class JSonReaderOpenFood {
 				}
 			}
 		}
+		//We add the value to the nutrient
 		try {
 			ingredient.setUnit(ingredientObject.getString(UNIT));
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			ingredient.setUnit("");
 		}	
 		try {
@@ -155,6 +175,7 @@ public class JSonReaderOpenFood {
 		} catch (JSONException e) {
 			ingredient.setPer_Day(0.0);
 		}
+		//We return the value
 		return ingredient;
 	}
 	

@@ -13,6 +13,7 @@ import org.glassfish.jersey.client.ClientConfig;
 public class Connection {
 
 	public String initiateConnection(){
+		//We initiate the connection
 		ClientConfig config = new ClientConfig();
 
 		Client client = ClientBuilder.newClient(config);
@@ -25,12 +26,10 @@ public class Connection {
 				.request()
 				.header("Accept", "application/json")
 				.header("Authorization", "Token token=fc9317c0f89a70797b43bb303d614af5")
-				.accept(MediaType.TEXT_PLAIN).get(String.class);
-//		System.out.println(response);
-		
+				.accept(MediaType.TEXT_PLAIN).get(String.class);		
 		return response;
 	}
-	
+	//We return always the same uri
 	private static URI getBaseURI() {
 		return UriBuilder.fromUri("https://www.openfood.ch").build();
 	}

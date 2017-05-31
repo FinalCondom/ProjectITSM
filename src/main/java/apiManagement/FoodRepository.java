@@ -8,10 +8,13 @@ import dto.Food;
 
 public interface FoodRepository extends MongoRepository<Food, String> {
 		
+	//use to find by a name without being case sensitive
 	List<Food> findByNameIgnoreCase(String name);
 
+	//use to find by a quantity
 	List<Food> findByQuantity(double quantity);
 	
-	List<Food> findByNameAndQuantity(String name, double quantity);
+	//use to find by a name without being case sensitive and a quantity
+	List<Food> findByQuantityAndNameIgnoreCase(double quantity, String name);
 	
 }	
